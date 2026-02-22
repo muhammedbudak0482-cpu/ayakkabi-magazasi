@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reels Paylaşım Platformu</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #262626;
+            background: #000;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            padding: 20px;
+        }
+        .reels-card {
+            background: #121212;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid #262626;
+        }
+        .reels-video {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            background: #262626;
+        }
+        .info {
+            padding: 15px;
+        }
+        .btn-download {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        h1 { font-size: 20px; margin: 0; color: #fff; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🔥 Popüler Reels Videoları</h1>
+</header>
+
+<div class="container">
+    <div class="reels-card">
+        <div class="info">
+            <strong>@kullanici_adin</strong>
+            <p>Bu videoyu keşfetmek için aşağıya bak!</p>
+        </div>
+        <iframe class="reels-video" src="https://www.instagram.com/reels/videos/ÖRNEK_KOD/embed" frameborder="0"></iframe>
+        <div class="info">
+            <a href="#" class="btn-download">Videoyu İndir / İzle</a>
+        </div>
+    </div>
+
+    <div class="reels-card">
+        <div class="info">
+            <strong>@kullanici_adin</strong>
+            <p>Yeni sezon Reels videosu yayında! 🚀</p>
+        </div>
+        <div class="reels-video" style="display: flex; align-items: center; justify-content: center;">
+            <p>Video Buraya Gelecek</p>
+        </div>
+        <div class="info">
+            <a href="#" class="btn-download">Hemen İzle</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
