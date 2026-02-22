@@ -3,50 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reels Keşfet Platformu</title>
+    <title>M-Panel | Instagram Servisleri</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        .reels-container { width: 100%; max-width: 450px; height: 100vh; overflow-y: scroll; snap-type: y mandatory; }
-        .reel { width: 100%; height: 100vh; snap-align: start; position: relative; background: #111; display: flex; align-items: center; justify-content: center; }
-        iframe { width: 100%; height: 80%; border: none; }
-        .actions { position: absolute; right: 15px; bottom: 100px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
-        .action-btn { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
-        .action-btn span { font-size: 14px; margin-top: 5px; }
-        .action-btn.liked { color: #ff3040; }
-        header { position: fixed; top: 0; width: 100%; padding: 15px; text-align: center; background: rgba(0,0,0,0.5); z-index: 10; font-weight: bold; }
+        :root { --primary: #833ab4; --gradient: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        body { background: #0f0f0f; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        .header { width: 100%; background: #1a1a1a; padding: 20px; text-align: center; border-bottom: 2px solid #333; }
+        .panel-card { background: #1a1a1a; width: 90%; max-width: 400px; margin-top: 30px; border-radius: 15px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; }
+        h2 { text-align: center; margin-bottom: 25px; color: #fff; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; color: #aaa; }
+        input, select { width: 100%; padding: 12px; background: #262626; border: 1px solid #444; border-radius: 8px; color: white; box-sizing: border-box; }
+        .btn-send { width: 100%; padding: 15px; background: var(--gradient); border: none; border-radius: 8px; color: white; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-send:hover { opacity: 0.8; transform: scale(1.02); }
+        .status { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; font-size: 14px; }
+        .success { display: block; background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid #2ecc71; }
     </style>
 </head>
 <body>
 
-<header>Reels Keşfet 🔥</header>
+<div class="header">
+    <h1 style="margin:0; font-size: 24px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">M-PANEL V1.0</h1>
+</div>
 
-<div class="reels-container">
-    <div class="reel">
-        <iframe src="https://www.instagram.com/reels/videos/DGA_Q_6y7Nf/embed"></iframe>
-        <div class="actions">
-            <button class="action-btn" onclick="toggleLike(this)"><i class="fas fa-heart"></i><span>Beğen</span></button>
-            <button class="action-btn" onclick="alert('Bağlantı kopyalandı!')"><i class="fas fa-share"></i><span>Paylaş</span></button>
-        </div>
+<div class="panel-card">
+    <h2>Servis Seçiniz</h2>
+    
+    <div class="input-group">
+        <label>Instagram Kullanıcı Adı</label>
+        <input type="text" id="username" placeholder="@kullaniciadi">
     </div>
 
-    <div class="reel">
-        <iframe src="https://www.instagram.com/reels/videos/DFL0LqXy4_t/embed"></iframe>
-        <div class="actions">
-            <button class="action-btn" onclick="toggleLike(this)"><i class="fas fa-heart"></i><span>Beğen</span></button>
-            <button class="action-btn" onclick="alert('Bağlantı kopyalandı!')"><i class="fas fa-share"></i><span>Paylaş</span></button>
-        </div>
+    <div class="input-group">
+        <label>İşlem Türü</label>
+        <select id="type">
+            <option value="follower">👤 Takipçi Gönder</option>
+            <option value="like">❤️ Beğeni Gönder</option>
+            <option value="view">🎬 Reels İzlenme Gönder</option>
+        </select>
     </div>
+
+    <div class="input-group">
+        <label>Miktar</label>
+        <select id="amount">
+            <option value="100">100</option>
+            <option value="500">500</option>
+            <option value="1000">1.000</option>
+            <option value="5000">5.000</option>
+        </select>
+    </div>
+
+    <button class="btn-send" onclick="startProcess()">İŞLEMİ BAŞLAT</button>
+
+    <div id="statusBox" class="status"></div>
 </div>
 
 <script>
-    function toggleLike(btn) {
-        btn.classList.toggle('liked');
-        if(btn.classList.contains('liked')) {
-            btn.querySelector('span').innerText = "Beğenildi";
-        } else {
-            btn.querySelector('span').innerText = "Beğen";
+    function startProcess() {
+        const user = document.getElementById('username').value;
+        const box = document.getElementById('statusBox');
+        
+        if(user === "") {
+            alert("Lütfen kullanıcı adı girin!");
+            return;
         }
+
+        box.style.display = "block";
+        box.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Bağlantı kuruluyor...";
+        box.className = "status";
+
+        setTimeout(() => {
+            box.innerHTML = "<i class='fas fa-check'></i> Hedef bulundu: " + user;
+            setTimeout(() => {
+                box.className = "status success";
+                box.innerHTML = "<b>BAŞARILI!</b><br>İşlem sıraya alındı. 24 saat içinde tamamlanacaktır.";
+            }, 2000);
+        }, 2000);
     }
 </script>
 
