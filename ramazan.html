@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El İzleme Yazı</title>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <style>
+    body { margin: 0; background: #000; overflow: hidden; }
+    #output_canvas { width: 100vw; height: 100vh; transform: scaleX(-1); }
+    .info { position: fixed; top: 10px; width: 100%; text-align: center; color: gold; z-index: 100; font-family: sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="info">Kamerayı aç ve işaret parmağınla havaya yaz!</div>
+  <video id="input_video" style="display:none;"></video>
+  <canvas id="output_canvas"></canvas>
+  <script>
+    const videoElement = document.getElementById('input_video');
+    const canvasElement = document.getElementById('output_canvas');
+    const canvasCtx = canvasElement.getContext('2d');
+    let points = [];
+    function onResults(results) {
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+      if (results.multiHandLandmarks) {
+        for (const landmarks of results.multiHandLandmarks) {
+          const indexFinger = landmarks[8];
+          points.push({x: indexFinger.x * canvasElement.width, y: indexFinger.y * canvasElement.height});
+          drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {color: '#00FF00', lineWidth: 2});
+        }
+      }
+      canvasCtx.beginPath();
+      canvasCtx.lineWidth = 8;
+      canvasCtx.strokeStyle = 'gold';
+      canvasCtx.lineCap = 'round';
+      for (let i = 1; i < points.length; i++) {
+        canvasCtx.moveTo(points[i-1].x, points[i-1].y);
+        canvasCtx.lineTo(points[i].x, points[i].y);
+      }
+      canvasCtx.stroke();
+      if (points.length > 50) points.shift();
+      canvasCtx.restore();
+    }
+    const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+    hands.setOptions({ maxNumHands: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+    hands.onResults(onResults);
+    const camera = new Camera(videoElement, {
+      onFrame: async () => { await hands.send({image: videoElement}); },
+      width: 640, height: 480
+    });
+    camera.start();
+    canvasElement.width = window.innerWidth;
+    canvasElement.height = window.innerHeight;
+  </script>
+</body>
+</html>
+
